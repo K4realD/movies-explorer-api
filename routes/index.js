@@ -10,8 +10,8 @@ const { login, signout, createUser } = require('../controllers/users');
 
 router.post('/signin', authValidator, login);
 router.post('/signup', registrationValidator, createUser);
-router.get('/signout', signout);
 router.use(auth);
+router.get('/signout', signout);
 router.use('/users', userRoutes);
 router.use('/movies', movieRoutes);
 router.use('*', (req, res, next) => {

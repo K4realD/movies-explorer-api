@@ -1,8 +1,11 @@
 const { Joi, celebrate } = require('celebrate');
+const validator = require('validator');
 
-const urlPattern = /https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-.~:/?#[\]@!$&'()*+,;=]{2,}#?/;
-const langRuPattern = /^[\d\sА-Яа-я-._:?#@!$&'()+,;=]+$/;
-const langEnPattern = /^[\w\s\-.:?#@!$&'()+,;=]+$/;
+const url = (value, helpers) => (validator.isURL(value) ? value : helpers.message('Введенные данные не являются ссылкой'));
+
+const langRU = (value, helpers) => (validator.isAlpha(value, ['ru-RU'], { ignore: ' -' }) ? value : helpers.message('Название должно быть на русском языке'));
+
+const langEN = (value, helpers) => (validator.isAlpha(value, ['en-US'], { ignore: ' -' }) ? value : helpers.message('Название должно быть на английском языке'));
 
 const userValidator = celebrate({
   body: Joi.object().keys({
@@ -18,12 +21,12 @@ const movieValidator = celebrate({
     duration: Joi.number().integer().positive().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().pattern(urlPattern),
-    trailerLink: Joi.string().required().pattern(urlPattern),
-    thumbnail: Joi.string().required().pattern(urlPattern),
+    image: Joi.string().required().custom(url),
+    trailerLink: Joi.string().required().custom(url),
+    thumbnail: Joi.string().required().custom(url),
     movieId: Joi.number().positive().required(),
-    nameRu: Joi.string().required().pattern(langRuPattern),
-    nameEn: Joi.string().required().pattern(langEnPattern),
+    nameRU: Joi.string().required().custom(langRU),
+    nameEN: Joi.string().required().custom(langEN),
   }),
 });
 

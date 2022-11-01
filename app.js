@@ -17,12 +17,12 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(requestLogger);
 app.use(rateLimit);
 app.use(cors);
 mongoose.connect(NODE_ENV === 'production' ? DATA_BASE : 'mongodb://localhost:27017/moviesdb', {
   useNewUrlParser: true,
 });
-app.use(requestLogger);
 app.use(routes);
 app.use(errorLogger);
 app.use(errors());
